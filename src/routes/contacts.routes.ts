@@ -4,38 +4,38 @@ import {
   deleteContactsController,
   listContactsController,
   updateContactsController,
-} from '../controllers/Contacts.controller';
+} from '../controllers/contacts.controller';
 import { ensureAuthMiddleware } from '../middlewares/ensureAuth.middleware';
 import { ensureDataIsValidMiddleware } from '../middlewares/ensureDataIsValid.middleware';
 import {
   ContactsSchemaRequest,
   ContactsSchemaUpdate,
-} from '../schemas/Contacts.schemas';
+} from '../schemas/contacts.schemas';
 import { ensureIsOwnerMiddleware } from '../middlewares/ensureIsOwner.middleware';
 
-const ContactsRoutes = Router();
+const contactsRoutes = Router();
 
-ContactsRoutes.use(ensureAuthMiddleware);
+contactsRoutes.use(ensureAuthMiddleware);
 
-ContactsRoutes.post(
+contactsRoutes.post(
   '',
   ensureDataIsValidMiddleware(ContactsSchemaRequest),
   createContactsController
 );
 
-ContactsRoutes.get('', ensureIsOwnerMiddleware, listContactsController);
+contactsRoutes.get('', ensureIsOwnerMiddleware, listContactsController);
 
-ContactsRoutes.patch(
+contactsRoutes.patch(
   '/:id',
   ensureIsOwnerMiddleware,
   ensureDataIsValidMiddleware(ContactsSchemaUpdate),
   updateContactsController
 );
 
-ContactsRoutes.delete(
+contactsRoutes.delete(
   '/:id',
   ensureIsOwnerMiddleware,
   deleteContactsController
 );
 
-export { ContactsRoutes };
+export { contactsRoutes };
