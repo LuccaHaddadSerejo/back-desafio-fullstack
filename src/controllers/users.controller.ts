@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
 import { createUserService } from '../services/Users/createUser.service';
 import { listUsersService } from '../services/Users/listUsers.service';
-import { TUserUpdateRequest } from '../interfaces/Users.interfaces';
+import {
+  TUserUpdateRequest,
+  TUserRequest,
+} from '../interfaces/Users.interfaces';
 import { updateUserService } from '../services/Users/updateUser.service';
 import { deleteUserService } from '../services/Users/deleteUser.service';
 
 const createUserController = async (req: Request, res: Response) => {
-  const userid = res.locals.userId;
-
-  const newUser = await createUserService(req.body, userid);
+  const { email, name, password, phone }: TUserRequest = req.body;
+  const newUser = await createUserService({ email, name, password, phone });
 
   return res.status(201).json(newUser);
 };

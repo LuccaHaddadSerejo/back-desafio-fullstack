@@ -14,7 +14,7 @@ app.use(express.json());
 
 app.use('/users', usersRoutes);
 app.use('/login', loginRoutes);
-app.use('/contacts', tasksRoutes);
+app.use('/contacts', contactsRoutes);
 
 app.use(handleAppError);
 
