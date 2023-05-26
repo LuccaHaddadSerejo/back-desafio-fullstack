@@ -28,9 +28,9 @@ const createTokenService = async ({
     throw new AppError('Invalid credentials', 403);
   }
 
-  const token = jwt.sign({ userName: user.name }, process.env.SECRET_KEY!, {
+  const token = jwt.sign({ email: user.email }, process.env.SECRET_KEY!, {
     expiresIn: '5h',
-    subject: user.id,
+    subject: String(user.id),
   });
 
   return token;
