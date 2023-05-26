@@ -1,4 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Contact } from './contacts.entity';
 
 @Entity('users')
 class User {
@@ -16,6 +17,9 @@ class User {
 
   @Column()
   phone: string;
+
+  @OneToMany(() => Contact, (contact) => contact.user)
+  contacts: Contact[];
 }
 
 export { User };

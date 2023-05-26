@@ -4,7 +4,7 @@ import { User } from '../../entities/user.entity';
 import {
   TUserResponse,
   TUserUpdateRequest,
-} from '../../interfaces/user.interface';
+} from '../../interfaces/user.interfaces';
 import { userSchemaResponse } from '../../schemas/user.schema';
 
 const updateUserService = async (

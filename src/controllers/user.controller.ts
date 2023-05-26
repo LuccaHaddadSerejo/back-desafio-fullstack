@@ -6,7 +6,10 @@ import {
   listUserByIdService,
   listUsersService,
 } from '../services/users/listUsers.service';
-import { TUserUpdateRequest, TUserRequest } from '../interfaces/user.interface';
+import {
+  TUserUpdateRequest,
+  TUserRequest,
+} from '../interfaces/user.interfaces';
 
 const createUserController = async (req: Request, res: Response) => {
   const { email, name, password, phone }: TUserRequest = req.body;

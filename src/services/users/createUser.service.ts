@@ -1,6 +1,6 @@
 import { AppDataSource } from '../../data-source';
 import { User } from '../../entities/user.entity';
-import { TUserRequest, TUserResponse } from '../../interfaces/user.interface';
+import { TUserRequest, TUserResponse } from '../../interfaces/user.interfaces';
 import { hash } from 'bcryptjs';
 import { userSchemaResponse } from '../../schemas/user.schema';
 import { AppError } from '../../errors/AppError';

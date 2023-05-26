@@ -4,7 +4,7 @@ import { AppDataSource } from '../../data-source';
 import {
   TUserResponseMultiple,
   TUserResponse,
-} from '../../interfaces/user.interface';
+} from '../../interfaces/user.interfaces';
 import {
   userSchemaMultiple,
   userSchemaResponse,

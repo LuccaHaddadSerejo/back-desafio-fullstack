@@ -1,41 +1,38 @@
-// import { Router } from 'express';
-// import {
-//   createContactsController,
-//   deleteContactsController,
-//   listContactsController,
-//   updateContactsController,
-// } from '../controllers/contacts.controller';
-// import { ensureAuthMiddleware } from '../middlewares/ensureAuth.middleware';
-// import { ensureDataIsValidMiddleware } from '../middlewares/ensureDataIsValid.middleware';
-// import {
-//   ContactsSchemaRequest,
-//   ContactsSchemaUpdate,
-// } from '../schemas/contacts.schemas';
-// import { ensureIsOwnerMiddleware } from '../middlewares/ensureIsOwner.middleware';
+import { Router } from 'express';
+import { ensureAuth } from '../middlewares/jwt/ensureAuth.middleware';
+import { ensureDataIsValid } from '../middlewares/jwt/ensureDataIsValid.middleware';
+import {
+  createContactController,
+  deleteContactController,
+  listContactsByIdController,
+  listContactsController,
+  updateContactController,
+} from '../controllers/contacts.controller';
+import {
+  contactSchemaRequest,
+  contactSchemaUpdate,
+} from '../schemas/contacts.schemas';
 
-// const contactsRoutes = Router();
+const contactsRoutes = Router();
 
-// contactsRoutes.use(ensureAuthMiddleware);
+contactsRoutes.use(ensureAuth);
 
-// contactsRoutes.post(
-//   '',
-//   ensureDataIsValidMiddleware(ContactsSchemaRequest),
-//   createContactsController
-// );
+contactsRoutes.post(
+  '',
+  ensureDataIsValid(contactSchemaRequest),
+  createContactController
+);
 
-// contactsRoutes.get('', ensureIsOwnerMiddleware, listContactsController);
+contactsRoutes.get('', listContactsController);
 
-// contactsRoutes.patch(
-//   '/:id',
-//   ensureIsOwnerMiddleware,
-//   ensureDataIsValidMiddleware(ContactsSchemaUpdate),
-//   updateContactsController
-// );
+contactsRoutes.get('', listContactsByIdController);
 
-// contactsRoutes.delete(
-//   '/:id',
-//   ensureIsOwnerMiddleware,
-//   deleteContactsController
-// );
+contactsRoutes.patch(
+  '/:id',
+  ensureDataIsValid(contactSchemaUpdate),
+  updateContactController
+);
 
-// export { contactsRoutes };
+contactsRoutes.delete('/:id', deleteContactController);
+
+export { contactsRoutes };
