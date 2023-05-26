@@ -9,7 +9,8 @@ import updateContactService from '../services/contacts/updateContact.service';
 import deleteContactService from '../services/contacts/deleteContact.service';
 
 const createContactController = async (req: Request, res: Response) => {
-  const newContact = await createContactService(req.body);
+  const id: number = Number(res.locals.userId);
+  const newContact = await createContactService(req.body, id);
 
   return res.status(201).json(newContact);
 };
@@ -22,21 +23,27 @@ const listContactsController = async (req: Request, res: Response) => {
 
 const listContactsByIdController = async (req: Request, res: Response) => {
   const contactId: number = Number(req.params.id);
-  const contacts = await listContactByIdService(contactId);
+  const contact = await listContactByIdService(contactId);
 
-  return res.json(contacts);
+  return res.json(contact);
 };
 
 const updateContactController = async (req: Request, res: Response) => {
-  const ContactId: number = Number(req.params.id);
+  const contactId: number = Number(req.params.id);
+  const userId: number = Number(res.locals.userId);
   const updatedValues: TContactUpdateRequest = req.body;
-  const updateContact = await updateContactService(updatedValues, ContactId);
+  const updateContact = await updateContactService(
+    updatedValues,
+    contactId,
+    userId
+  );
   return res.json(updateContact);
 };
 
 const deleteContactController = async (req: Request, res: Response) => {
   const ContactId: number = Number(req.params.id);
-  await deleteContactService(ContactId);
+  const userId: number = Number(res.locals.userId);
+  await deleteContactService(ContactId, userId);
   res.status(204).send();
 };
 

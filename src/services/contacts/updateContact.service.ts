@@ -5,27 +5,37 @@ import {
   TContactResponse,
   TContactUpdateRequest,
 } from '../../interfaces/contacts.interfaces';
-import { userSchemaResponse } from '../../schemas/user.schema';
+import { contactSchema } from '../../schemas/contacts.schemas';
+import { AppError } from '../../errors/AppError';
 
 const updateUserService = async (
   data: TContactUpdateRequest,
-  id: number
+  contactId: number,
+  userId: number
 ): Promise<TContactResponse> => {
-  const userRepository: Repository<Contact> =
+  const contactRepository: Repository<Contact> =
     AppDataSource.getRepository(Contact);
 
-  const oldData = await userRepository.findOneBy({
-    id: id,
+  const oldData = await contactRepository.findOneBy({
+    id: contactId,
   });
 
-  const user: Contact = userRepository.create({
+  const findContact = await contactRepository.find({
+    where: { id: contactId },
+    relations: ['user'],
+  });
+
+  if (findContact![0].user.id !== userId) {
+    throw new AppError("You don't have permission to do this action", 409);
+  }
+  const contact: Contact = contactRepository.create({
     ...oldData,
     ...data,
   });
 
-  await userRepository.save(user);
+  await contactRepository.save(contact);
 
-  return userSchemaResponse.parse(user);
+  return contactSchema.parse(contact);
 };
 
 export default updateUserService;

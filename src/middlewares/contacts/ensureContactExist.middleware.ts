@@ -11,10 +11,8 @@ const ensureContactExists = async (
 
   const contactId: number = Number(req.params.id);
 
-  const contact = await contactRepository.findOne({
-    where: {
-      id: contactId,
-    },
+  const contact = await contactRepository.findOneBy({
+    id: contactId,
   });
 
   if (!contact) {

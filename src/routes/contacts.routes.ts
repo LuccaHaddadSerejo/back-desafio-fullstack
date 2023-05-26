@@ -12,6 +12,7 @@ import {
   contactSchemaRequest,
   contactSchemaUpdate,
 } from '../schemas/contacts.schemas';
+import { ensureContactExists } from '../middlewares/contacts/ensureContactExist.middleware';
 
 const contactsRoutes = Router();
 
@@ -25,14 +26,15 @@ contactsRoutes.post(
 
 contactsRoutes.get('', listContactsController);
 
-contactsRoutes.get('', listContactsByIdController);
+contactsRoutes.get('/:id', ensureContactExists, listContactsByIdController);
 
 contactsRoutes.patch(
   '/:id',
   ensureDataIsValid(contactSchemaUpdate),
+  ensureContactExists,
   updateContactController
 );
 
-contactsRoutes.delete('/:id', deleteContactController);
+contactsRoutes.delete('/:id', ensureContactExists, deleteContactController);
 
 export { contactsRoutes };

@@ -3,12 +3,23 @@ import { Contact } from '../../entities/contacts.entity';
 import { AppDataSource } from '../../data-source';
 import { AppError } from '../../errors/AppError';
 
-const deleteContactService = async (id: number): Promise<void> => {
-  const userRepository: Repository<Contact> =
+const deleteContactService = async (
+  contactId: number,
+  userId: number
+): Promise<void> => {
+  const contactRepository: Repository<Contact> =
     AppDataSource.getRepository(Contact);
-  const contact = await userRepository.findOneBy({ id: id });
 
-  await userRepository.remove(contact!);
+  const contact = await contactRepository.find({
+    where: { id: contactId },
+    relations: ['user'],
+  });
+
+  if (contact![0].user.id !== userId) {
+    throw new AppError("You don't have permission to do this action", 409);
+  }
+
+  await contactRepository.remove(contact!);
 };
 
 export default deleteContactService;

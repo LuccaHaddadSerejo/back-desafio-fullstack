@@ -12,12 +12,16 @@ import {
 import { AppError } from '../../errors/AppError';
 
 const listContactsService = async (): Promise<TContactResponseMultiple> => {
-  const userRepository: Repository<Contact> =
+  const contactsRepository: Repository<Contact> =
     AppDataSource.getRepository(Contact);
 
-  const users: Array<Contact> = await userRepository.find();
+  const contacts: Array<Contact> = await contactsRepository.find({
+    relations: {
+      user: true,
+    },
+  });
 
-  return contactSchemaMultiple.parse(users);
+  return contactSchemaMultiple.parse(contacts);
 };
 
 const listContactByIdService = async (
@@ -26,9 +30,18 @@ const listContactByIdService = async (
   const contactRepository: Repository<Contact> =
     AppDataSource.getRepository(Contact);
 
-  const contact = await contactRepository.findOneBy({ id: id });
+  const contact: Array<Contact> = await contactRepository.find({
+    where: { id: id },
+    relations: {
+      user: true,
+    },
+  });
 
-  return contactSchema.parse(contact);
+  if (!contact[0]) {
+    throw new AppError('Contact not found', 404);
+  }
+
+  return contactSchema.parse(contact[0]);
 };
 
 export { listContactsService, listContactByIdService };

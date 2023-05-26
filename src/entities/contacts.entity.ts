@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 
 @Entity('contacts')
@@ -15,7 +22,13 @@ class Contact {
   @Column()
   phone: string;
 
-  @ManyToOne(() => User)
+  @CreateDateColumn({ type: 'date' })
+  createdAt: string;
+
+  @UpdateDateColumn({ type: 'date' })
+  updatedAt: string;
+
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
   user: User;
 }
 
