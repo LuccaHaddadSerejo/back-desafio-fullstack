@@ -1,41 +1,56 @@
 import { Request, Response } from 'express';
-import { createContactService } from '../services/Contacts/createContact.service';
-import { listContactsService } from '../services/Contacts/listContacts.service';
-import { TContactUpdateRequest } from '../interfaces/Contacts.interfaces';
-import { updateContactService } from '../services/Contacts/updateContact.service';
-import { deleteContactService } from '../services/Contacts/deleteContact.service';
+import createContactService from '../services/contacts/createContact.service';
+import {
+  listContactsService,
+  listContactByIdService,
+} from '../services/contacts/listContacts.service';
+import { TContactUpdateRequest } from '../interfaces/contacts.interfaces';
+import updateContactService from '../services/contacts/updateContact.service';
+import deleteContactService from '../services/contacts/deleteContact.service';
 
 const createContactController = async (req: Request, res: Response) => {
-  const userid = res.locals.userId;
-
-  const newContact = await createContactService(req.body, userid);
+  const id: number = Number(res.locals.userId);
+  const newContact = await createContactService(req.body, id);
 
   return res.status(201).json(newContact);
 };
 
 const listContactsController = async (req: Request, res: Response) => {
-  const userid = res.locals.userId;
-  const Contacts = await listContactsService(userid);
+  const contacts = await listContactsService();
 
-  return res.json(Contacts);
+  return res.json(contacts);
+};
+
+const listContactsByIdController = async (req: Request, res: Response) => {
+  const contactId: number = Number(req.params.id);
+  const contact = await listContactByIdService(contactId);
+
+  return res.json(contact);
 };
 
 const updateContactController = async (req: Request, res: Response) => {
-  const ContactId = req.params.id;
+  const contactId: number = Number(req.params.id);
+  const userId: number = Number(res.locals.userId);
   const updatedValues: TContactUpdateRequest = req.body;
-  const updateContact = await updateContactService(updatedValues, ContactId);
+  const updateContact = await updateContactService(
+    updatedValues,
+    contactId,
+    userId
+  );
   return res.json(updateContact);
 };
 
 const deleteContactController = async (req: Request, res: Response) => {
-  const ContactId = req.params.id;
-  await deleteContactService(ContactId);
+  const ContactId: number = Number(req.params.id);
+  const userId: number = Number(res.locals.userId);
+  await deleteContactService(ContactId, userId);
   res.status(204).send();
 };
 
 export {
   createContactController,
   listContactsController,
-  updateContactController,
+  listContactsByIdController,
   deleteContactController,
+  updateContactController,
 };

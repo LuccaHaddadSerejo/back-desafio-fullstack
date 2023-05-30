@@ -2,33 +2,45 @@ import { Router } from 'express';
 import {
   createUserController,
   deleteUserController,
-  listUserController,
+  listUsersController,
+  listUserByIdController,
   updateUserController,
 } from '../controllers/user.controller';
-import { ensureAuthMiddleware } from '../middlewares/ensureAuth.middleware';
-import { ensureDataIsValidMiddleware } from '../middlewares/ensureDataIsValid.middleware';
-import { userSchemaRequest, userSchemaUpdate } from '../schemas/user.schemas';
-import { ensureIsOwnerMiddleware } from '../middlewares/ensureIsOwner.middleware';
+import { userSchemaRequest, userSchemaUpdate } from '../schemas/user.schema';
+import { ensureDataIsValid } from '../middlewares/jwt/ensureDataIsValid.middleware';
+import { ensureUserExists } from '../middlewares/user/ensureUserExists.middleware';
+import { ensureUserDontExists } from '../middlewares/user/ensureUserDontExists.middleware';
+import { ensureAuth } from '../middlewares/jwt/ensureAuth.middleware';
+import { ensureIsOwner } from '../middlewares/user/ensureIsOwner.middleware';
 
 const usersRoutes = Router();
 
 usersRoutes.post(
   '',
-  ensureDataIsValidMiddleware(userSchemaRequest),
+  ensureDataIsValid(userSchemaRequest),
+  ensureUserDontExists,
   createUserController
 );
 
-usersRoutes.use(ensureAuthMiddleware);
+usersRoutes.use(ensureAuth);
 
-usersRoutes.get('', listUserController);
+usersRoutes.get('', listUsersController);
+
+usersRoutes.get('/:id', ensureUserExists, listUserByIdController);
 
 usersRoutes.patch(
   '/:id',
-  ensureIsOwnerMiddleware,
-  ensureDataIsValidMiddleware(userSchemaUpdate),
+  ensureUserExists,
+  ensureDataIsValid(userSchemaUpdate),
+  ensureIsOwner,
   updateUserController
 );
 
-usersRoutes.delete('/:id', ensureIsOwnerMiddleware, deleteUserController);
+usersRoutes.delete(
+  '/:id',
+  ensureUserExists,
+  ensureIsOwner,
+  deleteUserController
+);
 
 export { usersRoutes };
