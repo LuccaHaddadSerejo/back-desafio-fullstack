@@ -5,6 +5,7 @@ import {
   TUserResponse,
   TUserUpdateRequest,
 } from '../../interfaces/user.interfaces';
+
 import { userSchemaResponse } from '../../schemas/user.schema';
 
 const updateUserService = async (

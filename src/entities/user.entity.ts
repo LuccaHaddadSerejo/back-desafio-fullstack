@@ -1,3 +1,4 @@
+import { getRounds, hashSync } from 'bcryptjs';
 import {
   Column,
   Entity,
@@ -5,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import { Contact } from './contacts.entity';
 
@@ -30,6 +33,15 @@ class User {
 
   @UpdateDateColumn({ type: 'date' })
   updatedAt: string;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  hashPassword() {
+    const isEncrypted = getRounds(this.password);
+    if (!isEncrypted) {
+      this.password = hashSync(this.password, 10);
+    }
+  }
 
   @OneToMany(() => Contact, (contact) => contact.user)
   contacts: Array<Contact>;

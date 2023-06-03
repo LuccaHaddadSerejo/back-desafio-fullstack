@@ -1,7 +1,7 @@
 import { AppDataSource } from '../../data-source';
 import { User } from '../../entities/user.entity';
 import { TUserRequest, TUserResponse } from '../../interfaces/user.interfaces';
-import { hash } from 'bcryptjs';
+
 import { userSchemaResponse } from '../../schemas/user.schema';
 
 const createUserService = async (
@@ -10,13 +10,11 @@ const createUserService = async (
   const { email, name, password, phone } = data;
   const userRepository = AppDataSource.getRepository(User);
 
-  const hashedPassword = await hash(password, 10);
-
   const user = userRepository.create({
     name,
     email,
     phone,
-    password: hashedPassword,
+    password,
   });
 
   await userRepository.save(user);

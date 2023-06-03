@@ -28,6 +28,7 @@ const updateUserService = async (
   if (findContact![0].user.id !== userId) {
     throw new AppError("You don't have permission to do this action", 409);
   }
+
   const contact: Contact = contactRepository.create({
     ...oldData,
     ...data,

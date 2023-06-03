@@ -1,14 +1,15 @@
 import { z } from 'zod';
-import { userSchemaResponse } from '../schemas/user.schema';
 
 const contactSchema = z.object({
   id: z.number(),
   name: z.string(),
   email: z.string().email(),
   phone: z.string(),
-  user: z.object({
-    id: z.number(),
-  }),
+  user: z.optional(
+    z.object({
+      id: z.number(),
+    })
+  ),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
