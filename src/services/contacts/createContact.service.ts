@@ -17,15 +17,16 @@ const createContactService = async (
 
   const findUser = await userRepository.find({
     where: { id: id },
+    relations: ['contacts'],
   });
 
-  if (findUser.length === 0) {
+  if (!findUser) {
     throw new AppError('User not found', 404);
   }
 
-  const findContact = await contactRepository.findOneBy({
-    email: findUser[0].email,
-  });
+  const findContact = findUser[0].contacts.find(
+    (elt) => elt.email === data.email
+  );
 
   if (findContact) {
     throw new AppError('Contact already registered', 409);
