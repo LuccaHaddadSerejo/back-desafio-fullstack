@@ -14,7 +14,7 @@ Esse serviço possui uma API REST para criar, listar, atualizar e deletar os dad
 
 - O banco de dados utilizado foi  o **PostgreSQL**.
 - Foi desenvolvido com Typescript, Typeorm, Node.js, Express e outras bibliotecas.
-- Link para o frontend:
+- Link para o frontend: https://github.com/LuccaHaddadSerejo/front-desafio-fullstack
 
 ## Endpoints do serviço
 
